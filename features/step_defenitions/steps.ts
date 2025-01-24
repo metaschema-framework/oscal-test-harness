@@ -26,13 +26,20 @@ Given('the metaschema directory is {string}', function(dir) {
   this.metaschemaDir = dir;
 });
 
-When('I validate {string} metaschema it passes style guide',{timeout:90000}, async function(type) {
+const VALIDATION_TIMEOUT = 90000;
+
+When('I validate {string} metaschema it passes style guide',{timeout: VALIDATION_TIMEOUT}, async function(type) {
   const metaschema = 'oscal_'+type+'_metaschema.xml';
   const metaschemaPath = `${this.metaschemaDir}/${metaschema}`;
   const sarifOutputPath = join(sarifDir, `${type}.sarif.json`);  
-  const {log} = await validateDocument(metaschemaPath,{extensions:[style],flags:[],quiet,module:"http://csrc.nist.gov/ns/oscal/metaschema/1.0"},executor);
-  this.sarifOutput=log;
-  writeFileSync(sarifOutputPath, JSON.stringify(log, null, 2));
+  try {
+    const {log} = await validateDocument(metaschemaPath,{extensions:[style],flags:[],quiet,module:"http://csrc.nist.gov/ns/oscal/metaschema/1.0"},executor);
+    this.sarifOutput=log;
+    writeFileSync(sarifOutputPath, JSON.stringify(log, null, 2));
+  } catch (error) {
+    console.error('Validation failed:', error);
+    throw error;
+  }
 });
 
 When('I validate OSCAL content in {string}',{timeout:90000}, async function(contentPath) {
