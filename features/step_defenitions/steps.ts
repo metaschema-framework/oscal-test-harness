@@ -69,7 +69,7 @@ Then('Sarif output should contain passing rules', function() {
 
 Then('Sarif output should not contain failing rules', function() {
   if (this.sarifOutput===null) {
-    throw ("missing sarif log")
+    throw new Error('Missing SARIF log');
   }
 
   const failingRules = this.sarifOutput.runs.flatMap((x:Run)=>x.results).filter((result:any) => result.kind === 'fail');
