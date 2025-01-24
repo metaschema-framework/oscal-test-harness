@@ -10,7 +10,12 @@ const quiet = process.env.OSCAL_QUIET === 'true' ? true : false;
 const executor = process.env.OSCAL_EXECUTOR === 'oscal-cli' ? 'oscal-cli' : 'oscal-server';
 
 if (!existsSync(sarifDir)) {
-  mkdirSync(sarifDir, { recursive: true });
+  try {
+    mkdirSync(sarifDir, { recursive: true });
+  } catch (error) {
+    console.error(`Failed to create directory ${sarifDir}:`, error);
+    throw error;
+  }
 }
 
 interface LogOptions {
