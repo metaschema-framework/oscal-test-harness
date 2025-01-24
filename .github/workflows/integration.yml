@@ -11,7 +11,7 @@ on:
       repo:
         description: 'OSCAL Repository (e.g., usnistgov/OSCAL)'
         required: true
-        default: 'usnistgov/OSCAL'
+        default: 'metaschema-framework/OSCAL'
         type: string
       branch:
         description: 'OSCAL Branch'
