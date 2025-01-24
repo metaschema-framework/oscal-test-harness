@@ -72,7 +72,7 @@ Then('Sarif output should contain passing rules', function() {
     throw new Error('Missing SARIF log');
   }
 
-  const passingRules = this.sarifOutput.runs.flatMap((x:Run)=>x.results).filter((result:any) => result.kind === 'pass');
+  const passingRules = this.sarifOutput.runs.flatMap((x:Run)=>x.results).filter((result:Result) => result.kind === 'pass');
   
   if (passingRules.length === 0) {
     throw new Error(`No passing rules found!\n\nFull SARIF Output:\n${formatSarifOutput(this.sarifOutput)}`);
@@ -84,7 +84,7 @@ Then('Sarif output should not contain failing rules', function() {
     throw new Error('Missing SARIF log');
   }
 
-  const failingRules = this.sarifOutput.runs.flatMap((x:Run)=>x.results).filter((result:any) => result.kind === 'fail');
+  const failingRules = this.sarifOutput.runs.flatMap((x:Run)=>x.results).filter((result:Result) => result.kind === 'fail');
   
   if (failingRules.length > 0) {
     throw new Error(`Found ${failingRules.length} failing results!\n\nFull SARIF Output:\n${formatSarifOutput(this.sarifOutput)}`);
