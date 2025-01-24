@@ -114,7 +114,7 @@ This allows testing against different OSCAL CLI versions and repository branches
 
 ## Project Structure
 
-```
+```text
 oscal-test-harness/
 ├── features/              # Cucumber feature files
 │   ├── oscal.feature     # OSCAL validation tests

@@ -5,9 +5,9 @@ import { join } from "path";
 import { Log, Result, Run } from 'sarif';
 
 const sarifDir = join(process.cwd(), "sarif");
-const style="style/oscal_style_guide.xml"
-const quiet = process.env.OSCAL_QUIET === 'true' ? true : false;
-const executor = process.env.OSCAL_EXECUTOR === 'oscal-cli' ? 'oscal-cli' : 'oscal-server';
+const style = process.env.OSCAL_STYLE_GUIDE || "style/oscal_style_guide.xml"
+const quiet = process.env.OSCAL_QUIET === 'true'
+const executor = process.env.OSCAL_EXECUTOR || 'oscal-cli';
 
 if (!existsSync(sarifDir)) {
   try {

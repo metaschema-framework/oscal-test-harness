@@ -37,7 +37,7 @@ jobs:
       - name: Read node version from .nvmrc
         id: nvmrc
         shell: bash
-        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+        run: echo "NODE_VERSION=$(cat ".nvmrc")" >> "$GITHUB_ENV"
 
       - name: Install Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
