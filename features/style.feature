@@ -4,8 +4,7 @@ Feature: Validate OSCAL Metaschema Style
   I want to OSCAL metaschemas to conform to a particular style
 
 Background: 
-    Given the OSCAL CLI tool is installed
-    And the metaschema directory is "./OSCAL/src/metaschema"
+    Given the metaschema directory is "./OSCAL/src/metaschema"
 
 Scenario Outline: Validate OSCAL style guide
     When I validate "<metaschema>" metaschema it passes style guide
@@ -14,11 +13,11 @@ Scenario Outline: Validate OSCAL style guide
 
     Examples:
       | metaschema    |
-      # | profile |
-      # | catalog |
+      | profile |
+      | catalog |
       | ssp |
-      # | poam |
-      # | assessment-common |
-      # | implementation-common |
-      # | assessment-plan |
-      # | assessment-results |
+      | poam |
+      | assessment-common |
+      | implementation-common |
+      | assessment-plan |
+      | assessment-results |

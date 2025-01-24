@@ -22,10 +22,6 @@ interface LogOptions {
   showFileName: boolean;
 }
 
-Given('the OSCAL CLI tool is installed', function() {
-  // Using the package directly now, no need to check CLI installation
-  return;
-});
 
 Given('the metaschema directory is {string}', function(dir) {
   this.metaschemaDir = dir;

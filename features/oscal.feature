@@ -4,8 +4,7 @@ Feature: Validate OSCAL Content
   I want to validate OSCAL content against appropriate metaschemas
 
   Background: 
-    Given the OSCAL CLI tool is installed
-    And the metaschema directory is "./OSCAL/src/metaschema"
+    Given the metaschema directory is "./OSCAL/src/metaschema"
 
   Scenario Outline: Validate OSCAL content
     When I validate OSCAL content in "<path>"
