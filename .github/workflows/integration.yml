@@ -8,12 +8,12 @@ on:
         required: true
         default: '2.4.0'
         type: string
-      oscal_repo:
-        description: 'OSCAL Repository'
+      repo:
+        description: 'OSCAL Repository (e.g., usnistgov/OSCAL)'
         required: true
         default: 'usnistgov/OSCAL'
         type: string
-      oscal_branch:
+      branch:
         description: 'OSCAL Branch'
         required: true
         default: 'main'
@@ -45,8 +45,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Configure OSCAL
+        shell: bash
         run: |
-          make configure OSCAL_CLI_VERSION=${{ inputs.cli_version }} OSCAL_REPO=${{ inputs.oscal_repo }}#${{ inputs.oscal_branch }}
+          # Handle SNAPSHOT versions by removing dots
+          CLI_VERSION="${{ inputs.cli_version }}"
+          if [[ "$CLI_VERSION" == *"SNAPSHOT"* ]]; then
+            CLI_VERSION=$(echo "$CLI_VERSION" | tr -d '.')
+          fi
+          make configure OSCAL_CLI_VERSION="$CLI_VERSION" REPO="${{ inputs.repo }}" BRANCH="${{ inputs.branch }}"
 
       - name: Run tests
         run: make test

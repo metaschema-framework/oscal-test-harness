@@ -18,10 +18,6 @@ ifeq ($(OSCAL_EXECUTOR),oscal-server)
 	endif
 endif
 
-ifdef OSCAL_REPO
-	REPO = $(shell echo '${OSCAL_REPO}' | cut -d'#' -f1)
-	BRANCH = $(shell echo '${OSCAL_REPO}' | cut -d'#' -f2)
-endif
 
 configure: clean check-executor
 	@echo "Downloading OSCAL from ${REPO} branch: ${BRANCH}"

@@ -77,9 +77,16 @@ The project includes a manual workflow for running integration tests with custom
 2. Select "OSCAL Validations: Integration tests" workflow
 3. Click "Run workflow"
 4. Configure the test parameters:
-   - **OSCAL CLI Version**: Version of the OSCAL CLI to use (default: 2.4.0)
-   - **OSCAL Repository**: GitHub repository containing OSCAL (default: usnistgov/OSCAL)
-   - **OSCAL Branch**: Branch of the OSCAL repository to test against (default: main)
+   - **CLI Version**: Version of the OSCAL CLI to use (default: 2.4.0)
+   - **Repository**: GitHub repository in format 'owner/repo' (default: usnistgov/OSCAL)
+   - **Branch**: Branch to test against (default: main)
+
+Example workflow parameters:
+- CLI Version: `2.5.0.SNAPSHOT`
+- Repository: `usnistgov/OSCAL`
+- Branch: `main`
+
+This will test using the specified repository and branch with CLI version `2.5.0.SNAPSHOT`.
 5. Click "Run workflow" to start the tests
 
 This allows testing against different OSCAL CLI versions and repository branches without modifying the code.
