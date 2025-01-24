@@ -1,0 +1,64 @@
+name: "OSCAL Validations: Integration tests"
+
+on:
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: 'OSCAL CLI Version'
+        required: true
+        default: '2.4.0'
+        type: string
+      repo:
+        description: 'OSCAL Repository (e.g., usnistgov/OSCAL)'
+        required: true
+        default: 'usnistgov/OSCAL'
+        type: string
+      branch:
+        description: 'OSCAL Branch'
+        required: true
+        default: 'main'
+        type: string
+
+jobs:
+  run-tests:
+    name: "Integration Tests (CLI: ${{ inputs.cli_version }}, Repo: ${{ inputs.repo }}, Branch: ${{ inputs.branch }})"
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+  
+      - name: Read node version from .nvmrc
+        id: nvmrc
+        shell: bash
+        run: echo "NODE_VERSION=$(cat ".nvmrc")" >> "$GITHUB_ENV"
+
+      - name: Install Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Configure OSCAL CLI ${{ inputs.cli_version }}
+        shell: bash
+        run: |
+          # Handle SNAPSHOT versions by removing dots
+          CLI_VERSION="${{ inputs.cli_version }}"
+          if [[ "$CLI_VERSION" == *"SNAPSHOT"* ]]; then
+            CLI_VERSION=$(echo "$CLI_VERSION" | tr -d '.')
+          fi
+          make configure OSCAL_CLI_VERSION="$CLI_VERSION" REPO="${{ inputs.repo }}" BRANCH="${{ inputs.branch }}"
+
+      - name: Run tests
+        run: make test
+
+      - name: Publish test results
+        uses: test-summary/action@v1
+        if: always()
+        with:
+          paths: "**/reports/junit-*.xml"
