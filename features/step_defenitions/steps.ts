@@ -2,12 +2,12 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { formatSarifOutput, validateDocument } from "oscal";
 import { join } from "path";
-import { Log } from 'sarif';
+import { Log, Result, Run } from 'sarif';
+
 const sarifDir = join(process.cwd(), "sarif");
-let sarifOutput:Log|null = null;
 const style="style/oscal_style_guide.xml"
-const quiet=false;
-const executor="oscal-cli"  
+const quiet = process.env.OSCAL_QUIET === 'true' ? true : false;
+const executor = process.env.OSCAL_EXECUTOR === 'oscal-cli' ? 'oscal-cli' : 'oscal-server';
 
 if (!existsSync(sarifDir)) {
   mkdirSync(sarifDir, { recursive: true });
@@ -31,7 +31,7 @@ When('I validate {string} metaschema it passes style guide',{timeout:90000}, asy
   const metaschemaPath = `${this.metaschemaDir}/${metaschema}`;
   const sarifOutputPath = join(sarifDir, `${type}.sarif.json`);  
   const {log} = await validateDocument(metaschemaPath,{extensions:[style],flags:[],quiet,module:"http://csrc.nist.gov/ns/oscal/metaschema/1.0"},executor);
-  sarifOutput=log;
+  this.sarifOutput=log;
   writeFileSync(sarifOutputPath, JSON.stringify(log, null, 2));
 });
 
@@ -45,7 +45,7 @@ When('I validate OSCAL content in {string}',{timeout:90000}, async function(cont
     const formattedOutput = formatSarifOutput(log);
     console.log(formattedOutput);
     
-    sarifOutput = log; // Set the global sarifOutput variable
+    this.sarifOutput = log; // Set the global this.sarifOutput variable
     
     this.result = { 
       isValid,
@@ -56,25 +56,25 @@ When('I validate OSCAL content in {string}',{timeout:90000}, async function(cont
 });
 
 Then('Sarif output should contain passing rules', function() {
-  if (sarifOutput===null) {
+  if (this.sarifOutput===null) {
     throw new Error('Missing SARIF log');
   }
 
-  const passingRules = sarifOutput.runs.flatMap(x=>x.results).filter((result:any) => result.kind === 'pass');
+  const passingRules = this.sarifOutput.runs.flatMap((x:Run)=>x.results).filter((result:any) => result.kind === 'pass');
   
   if (passingRules.length === 0) {
-    throw new Error(`No passing rules found!\n\nFull SARIF Output:\n${formatSarifOutput(sarifOutput)}`);
+    throw new Error(`No passing rules found!\n\nFull SARIF Output:\n${formatSarifOutput(this.sarifOutput)}`);
   }
 });
 
 Then('Sarif output should not contain failing rules', function() {
-  if (sarifOutput===null) {
+  if (this.sarifOutput===null) {
     throw ("missing sarif log")
   }
 
-  const failingRules = sarifOutput.runs.flatMap(x=>x.results).filter((result:any) => result.kind === 'fail');
+  const failingRules = this.sarifOutput.runs.flatMap((x:Run)=>x.results).filter((result:any) => result.kind === 'fail');
   
   if (failingRules.length > 0) {
-    throw new Error(`Found ${failingRules.length} failing results!\n\nFull SARIF Output:\n${formatSarifOutput(sarifOutput)}`);
+    throw new Error(`Found ${failingRules.length} failing results!\n\nFull SARIF Output:\n${formatSarifOutput(this.sarifOutput)}`);
   }
 });
