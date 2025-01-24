@@ -15,6 +15,7 @@ The OSCAL Test Harness helps ensure OSCAL content adheres to:
 - Node.js (Latest LTS version recommended)
 - npm or yarn package manager
 - OSCAL CLI tool
+- Java 11 or higher
 
 ## Installation
 
@@ -24,34 +25,64 @@ git clone https://github.com/your-org/oscal-test-harness.git
 cd oscal-test-harness
 ```
 
-2. Install dependencies:
+2. Clone the OSCAL repository (required for metaschemas):
+```bash
+git clone https://github.com/usnistgov/OSCAL.git
+cd OSCAL
+git checkout main
+cd ..
+```
+
+3. Install dependencies:
 ```bash
 npm install
 ```
 
+4. Configure the environment:
+```bash
+make configure
+```
+
 ## Usage
+
+### Local Testing
 
 The test harness provides several npm scripts for different testing scenarios:
 
-### Run all tests
+#### Run all tests
 ```bash
 npm test
 ```
 
-### Run only failed tests
+#### Run only failed tests
 ```bash
 npm run test:failed
 ```
 
-### Run style validation tests
+#### Run style validation tests
 ```bash
 npm run test:style
 ```
 
-### Run integration tests
+#### Run integration tests
 ```bash
 npm run test:integration
 ```
+
+### GitHub Actions Testing
+
+The project includes a manual workflow for running integration tests with custom OSCAL configurations:
+
+1. Go to the "Actions" tab in your GitHub repository
+2. Select "OSCAL Validations: Integration tests" workflow
+3. Click "Run workflow"
+4. Configure the test parameters:
+   - **OSCAL CLI Version**: Version of the OSCAL CLI to use (default: 2.4.0)
+   - **OSCAL Repository**: GitHub repository containing OSCAL (default: usnistgov/OSCAL)
+   - **OSCAL Branch**: Branch of the OSCAL repository to test against (default: main)
+5. Click "Run workflow" to start the tests
+
+This allows testing against different OSCAL CLI versions and repository branches without modifying the code.
 
 ## Features
 
