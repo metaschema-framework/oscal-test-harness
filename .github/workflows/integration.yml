@@ -21,14 +21,14 @@ on:
 
 jobs:
   run-tests:
-    name: "Integration Tests"
+    name: "Integration Tests (CLI: ${{ inputs.cli_version }}, Repo: ${{ inputs.repo }}, Branch: ${{ inputs.branch }})"
     runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Set up Java 11
         uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
@@ -39,12 +39,12 @@ jobs:
         shell: bash
         run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
 
-      - name: Install required node.js version
+      - name: Install Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Configure OSCAL
+      - name: Configure OSCAL CLI ${{ inputs.cli_version }}
         shell: bash
         run: |
           # Handle SNAPSHOT versions by removing dots
