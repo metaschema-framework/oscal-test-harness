@@ -1,13 +1,14 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { formatSarifOutput, validateDocument } from "oscal";
+import { ExecutorOptions } from "oscal/dist/utils";
 import { join } from "path";
 import { Log, Result, Run } from 'sarif';
 
 const sarifDir = join(process.cwd(), "sarif");
 const style = process.env.OSCAL_STYLE_GUIDE || "style/oscal_style_guide.xml"
 const quiet = process.env.OSCAL_QUIET === 'true'
-const executor = process.env.OSCAL_EXECUTOR || 'oscal-cli';
+const executor:ExecutorOptions = process.env.OSCAL_EXECUTOR as ExecutorOptions || 'oscal-cli';
 
 if (!existsSync(sarifDir)) {
   try {
